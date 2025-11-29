@@ -23,7 +23,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // Resourceful Routes untuk CRUD
         Route::resource('/buku', BookController::class)->names('dasbor.buku');
         Route::resource('/anggota', MemberController::class)->names('dasbor.anggota');
-        Route::resource('/kategori', \App\Http\Controllers\CategoryController::class)->names('dasbor.kategori');
+        Route::resource('/kategori', \App\Http\Controllers\CategoryController::class)->names('dasbor.kategori')->parameters(['kategori' => 'category']);
 
         // Rute Sirkulasi
         Route::get('/sirkulasi', [CirculationController::class, 'index'])->name('dasbor.sirkulasi.index');
