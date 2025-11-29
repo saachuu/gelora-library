@@ -12,7 +12,19 @@ class Book extends Model
     use HasFactory;
 
     protected $table = 'books';
-    protected $fillable = ['title', 'author', 'isbn', 'published_at'];
+    protected $fillable = [
+        'category_id',
+        'title',
+        'author',
+        'publisher',
+        'publication_year',
+        'isbn',
+        'location',
+        'stock',
+        'available',
+        'description',
+        'status',
+    ];
 
     /**
      * Get the category that owns the Book

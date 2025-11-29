@@ -18,21 +18,21 @@
                     <!-- Judul -->
                     <div>
                         <label for="title" class="block text-sm font-medium text-gray-700">Judul</label>
-                        <input type="text" name="title" id="title" value="{{ old('title', $buku->title ?? '') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
+                        <input type="text" name="title" id="title" value="{{ old('title', $buku->title ?? '') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-900" required>
                         @error('title') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                     </div>
 
                      <!-- Penulis -->
                     <div>
                         <label for="author" class="block text-sm font-medium text-gray-700">Penulis</label>
-                        <input type="text" name="author" id="author" value="{{ old('author', $buku->author ?? '') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
+                        <input type="text" name="author" id="author" value="{{ old('author', $buku->author ?? '') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-900" required>
                         @error('author') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                     </div>
 
                     <!-- Kategori -->
                     <div>
                         <label for="category_id" class="block text-sm font-medium text-gray-700">Kategori</label>
-                        <select name="category_id" id="category_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
+                        <select name="category_id" id="category_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-900" required>
                             @foreach($categories as $category)
                                 <option value="{{ $category->id }}" @if(isset($buku) && $buku->category_id == $category->id) selected @endif>
                                     {{ $category->name }}
@@ -45,35 +45,35 @@
                     <!-- ISBN -->
                     <div>
                         <label for="isbn" class="block text-sm font-medium text-gray-700">ISBN</label>
-                        <input type="text" name="isbn" id="isbn" value="{{ old('isbn', $buku->isbn ?? '') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
+                        <input type="text" name="isbn" id="isbn" value="{{ old('isbn', $buku->isbn ?? '') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-900" required>
                         @error('isbn') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                     </div>
 
                      <!-- Penerbit -->
                     <div>
                         <label for="publisher" class="block text-sm font-medium text-gray-700">Penerbit</label>
-                        <input type="text" name="publisher" id="publisher" value="{{ old('publisher', $buku->publisher ?? '') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
+                        <input type="text" name="publisher" id="publisher" value="{{ old('publisher', $buku->publisher ?? '') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-900" required>
                         @error('publisher') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                     </div>
 
                     <!-- Tahun Terbit -->
                     <div>
                         <label for="publication_year" class="block text-sm font-medium text-gray-700">Tahun Terbit</label>
-                        <input type="number" name="publication_year" id="publication_year" value="{{ old('publication_year', $buku->publication_year ?? '') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
+                        <input type="number" name="publication_year" id="publication_year" value="{{ old('publication_year', $buku->publication_year ?? '') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-900" required>
                         @error('publication_year') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                     </div>
 
                     <!-- Lokasi Rak -->
                     <div>
                         <label for="location" class="block text-sm font-medium text-gray-700">Lokasi Rak</label>
-                        <input type="text" name="location" id="location" value="{{ old('location', $buku->location ?? '') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
+                        <input type="text" name="location" id="location" value="{{ old('location', $buku->location ?? '') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-900" required>
                         @error('location') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                     </div>
 
                      <!-- Stok -->
                     <div>
                         <label for="stock" class="block text-sm font-medium text-gray-700">Stok</label>
-                        <input type="number" name="stock" id="stock" value="{{ old('stock', $buku->stock ?? '') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
+                        <input type="number" name="stock" id="stock" value="{{ old('stock', $buku->stock ?? '') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-900" required>
                         @error('stock') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                     </div>
 
@@ -81,7 +81,7 @@
                     <!-- Status -->
                     <div>
                         <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
-                        <select name="status" id="status" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
+                        <select name="status" id="status" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-900" required>
                             <option value="Tersedia" @if($buku->status == 'Tersedia') selected @endif>Tersedia</option>
                             <option value="Rusak" @if($buku->status == 'Rusak') selected @endif>Rusak</option>
                         </select>
@@ -92,7 +92,7 @@
                     <!-- Deskripsi -->
                     <div class="md:col-span-2">
                         <label for="description" class="block text-sm font-medium text-gray-700">Deskripsi</label>
-                        <textarea name="description" id="description" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">{{ old('description', $buku->description ?? '') }}</textarea>
+                        <textarea name="description" id="description" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-900">{{ old('description', $buku->description ?? '') }}</textarea>
                         @error('description') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                     </div>
                 </div>
