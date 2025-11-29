@@ -68,25 +68,25 @@
                     @csrf
                     <div class="space-y-4">
                         <div>
-                            <label for="member_id_number" class="block text-sm font-medium text-gray-700 mb-1">ID Anggota</label>
+                            <label for="member_id_number" class="block text-sm font-medium text-gray-700 mb-1">ID / Nama Anggota</label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                                     </svg>
                                 </div>
-                                <input type="text" name="member_id_number" id="member_id_number" class="pl-10 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-lg text-gray-900" placeholder="Masukkan ID Anggota" required>
+                                <input type="text" name="member_id_number" id="member_id_number" class="pl-10 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-lg text-gray-900" placeholder="Masukkan ID atau Nama Anggota" required>
                             </div>
                         </div>
                         <div>
-                            <label for="isbn_pinjam" class="block text-sm font-medium text-gray-700 mb-1">ISBN Buku</label>
+                            <label for="isbn_pinjam" class="block text-sm font-medium text-gray-700 mb-1">ISBN / Judul Buku</label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
                                     </svg>
                                 </div>
-                                <input type="text" name="isbn" id="isbn_pinjam" class="pl-10 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-lg text-gray-900" placeholder="Scan atau ketik ISBN" required>
+                                <input type="text" name="isbn" id="isbn_pinjam" class="pl-10 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-lg text-gray-900" placeholder="Scan ISBN atau Ketik Judul Buku" required>
                             </div>
                         </div>
                         <button type="submit" class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">

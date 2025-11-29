@@ -43,12 +43,39 @@ class CirculationController extends Controller
     public function storeLoan(Request $request)
     {
         $request->validate([
-            'member_id_number' => 'required|exists:members,member_id_number',
-            'isbn' => 'required|exists:books,isbn',
+            'member_id_number' => 'required|string',
+            'isbn' => 'required|string',
         ]);
 
-        $member = Member::where('member_id_number', $request->member_id_number)->first();
-        $book = Book::where('isbn', $request->isbn)->first();
+        // Cari anggota berdasarkan ID atau Nama
+        $members = Member::where('member_id_number', $request->member_id_number)
+            ->orWhere('full_name', 'like', '%' . $request->member_id_number . '%')
+            ->get();
+
+        if ($members->isEmpty()) {
+            return back()->with('error', 'Anggota tidak ditemukan.');
+        }
+
+        if ($members->count() > 1) {
+            return back()->with('error', 'Ditemukan lebih dari satu anggota dengan nama tersebut. Silakan gunakan ID Anggota.');
+        }
+
+        $member = $members->first();
+
+        // Cari buku berdasarkan ISBN atau Judul
+        $books = Book::where('isbn', $request->isbn)
+            ->orWhere('title', 'like', '%' . $request->isbn . '%')
+            ->get();
+
+        if ($books->isEmpty()) {
+            return back()->with('error', 'Buku tidak ditemukan.');
+        }
+
+        if ($books->count() > 1) {
+            return back()->with('error', 'Ditemukan lebih dari satu buku dengan judul tersebut. Silakan gunakan ISBN.');
+        }
+
+        $book = $books->first();
 
         // Cek apakah anggota aktif
         if (!$member->is_active) {
@@ -67,12 +94,13 @@ class CirculationController extends Controller
             'book_id' => $book->id,
             'loan_date' => now(),
             'due_date' => now()->addDays(7),
+            'status' => 'Dipinjam',
         ]);
 
         // Kurangi stok tersedia
         $book->decrement('available');
 
-        return redirect()->route('dasbor.sirkulasi.index')->with('success', 'Buku berhasil dipinjamkan.');
+        return redirect()->route('dasbor.sirkulasi.index')->with('success', 'Buku berhasil dipinjamkan kepada ' . $member->full_name);
     }
 
 
