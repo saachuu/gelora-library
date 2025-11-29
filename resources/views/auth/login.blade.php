@@ -37,11 +37,18 @@
         </div>
 
         <div class="flex items-center justify-between mt-6">
-            @if (Route::has('password.request'))
-                <a class="text-sm text-blue-600 hover:text-blue-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" href="{{ route('password.request') }}">
-                    {{ __('Lupa kata sandi?') }}
-                </a>
-            @endif
+            <div class="flex items-center space-x-4">
+                @if (Route::has('register'))
+                    <a class="text-sm text-blue-600 hover:text-blue-900" href="{{ route('register') }}">
+                        {{ __('Belum punya akun?') }}
+                    </a>
+                @endif
+                @if (Route::has('password.request'))
+                    <a class="text-sm text-blue-600 hover:text-blue-900" href="{{ route('password.request') }}">
+                        {{ __('Lupa kata sandi?') }}
+                    </a>
+                @endif
+            </div>
 
             <button type="submit" class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
                 {{ __('Masuk') }}

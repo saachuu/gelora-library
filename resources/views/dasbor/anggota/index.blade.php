@@ -17,7 +17,7 @@
                     </svg>
                 </div>
                 <input type="text" name="q" value="{{ request('q') }}" 
-                    class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:w-64 sm:text-sm" 
+                    class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:w-64 sm:text-sm text-gray-900" 
                     placeholder="Cari nama, ID, jabatan...">
             </form>
             

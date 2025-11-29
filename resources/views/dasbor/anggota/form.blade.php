@@ -30,7 +30,7 @@
                                 </svg>
                             </div>
                             <input type="text" name="member_id_number" id="member_id_number" value="{{ old('member_id_number', $anggotum->member_id_number ?? '') }}" 
-                                class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-lg" 
+                                class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-lg text-gray-900" 
                                 placeholder="Contoh: 12345678" required>
                         </div>
                         @error('member_id_number') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
@@ -46,7 +46,7 @@
                                 </svg>
                             </div>
                             <input type="text" name="full_name" id="full_name" value="{{ old('full_name', $anggotum->full_name ?? '') }}" 
-                                class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-lg" 
+                                class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-lg text-gray-900" 
                                 placeholder="Nama Lengkap Anggota" required>
                         </div>
                         @error('full_name') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
@@ -62,7 +62,7 @@
                                 </svg>
                             </div>
                             <input type="text" name="position" id="position" value="{{ old('position', $anggotum->position ?? '') }}" 
-                                class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-lg" 
+                                class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-lg text-gray-900" 
                                 placeholder="Contoh: Siswa Kelas 10A" required>
                         </div>
                         @error('position') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
@@ -78,7 +78,7 @@
                                 </svg>
                             </div>
                             <input type="text" name="contact" id="contact" value="{{ old('contact', $anggotum->contact ?? '') }}" 
-                                class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-lg" 
+                                class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-lg text-gray-900" 
                                 placeholder="081234567890" required>
                         </div>
                         @error('contact') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
@@ -94,7 +94,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                 </svg>
                             </div>
-                            <select name="is_active" id="is_active" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-lg" required>
+                            <select name="is_active" id="is_active" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-lg text-gray-900" required>
                                 <option value="1" @if($anggotum->is_active) selected @endif>Aktif</option>
                                 <option value="0" @if(!$anggotum->is_active) selected @endif>Tidak Aktif</option>
                             </select>

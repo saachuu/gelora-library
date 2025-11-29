@@ -22,7 +22,7 @@
                 <!-- Sidebar Header -->
                 <div class="flex items-center justify-center h-16 border-b">
                      <a href="{{ route('dashboard') }}" class="text-xl font-bold text-indigo-600">
-                        Perpusatakaan
+                        Gelora Library
                     </a>
                 </div>
                 <!-- Sidebar Links -->
@@ -73,7 +73,7 @@
                 <div class="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
                     <div class="flex-shrink-0 flex items-center px-4">
                          <a href="{{ route('dashboard') }}" class="text-xl font-bold text-indigo-600">
-                            Perpusatakaan
+                        Gelora Library
                         </a>
                     </div>
                     <nav class="mt-5 px-2 space-y-1">

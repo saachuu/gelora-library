@@ -49,7 +49,7 @@
                         @csrf
                         <div class="mb-4">
                             <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nama Kategori</label>
-                            <input type="text" name="name" id="name" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-lg" placeholder="Contoh: Fiksi, Sains" required>
+                            <input type="text" name="name" id="name" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-lg text-gray-900" placeholder="Contoh: Fiksi, Sains" required>
                             @error('name')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror

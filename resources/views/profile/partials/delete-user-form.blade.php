@@ -35,7 +35,7 @@
                     id="password"
                     name="password"
                     type="password"
-                    class="focus:ring-indigo-500 focus:border-indigo-500 block w-3/4 sm:text-sm border-gray-300 rounded-lg"
+                    class="focus:ring-indigo-500 focus:border-indigo-500 block w-3/4 sm:text-sm border-gray-300 rounded-lg text-gray-900"
                     placeholder="{{ __('Kata Sandi') }}"
                 />
 

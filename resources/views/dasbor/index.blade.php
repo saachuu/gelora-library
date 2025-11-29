@@ -5,7 +5,7 @@
         <!-- Welcome Section -->
         <div class="mb-8 flex flex-col md:flex-row justify-between items-center bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-8 text-white shadow-lg">
             <div>
-                <h1 class="text-3xl font-bold mb-2">Selamat Datang, {{ Auth::user()->name }}! 👋</h1>
+                <h1 class="text-3xl font-bold mb-2">Selamat Datang, {{ Auth::user()->name }}!</h1>
                 <p class="text-indigo-100">Berikut adalah ringkasan aktivitas perpustakaan hari ini.</p>
             </div>
             <div class="mt-4 md:mt-0">

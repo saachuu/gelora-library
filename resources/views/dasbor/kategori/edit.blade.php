@@ -14,7 +14,7 @@
                 @method('PUT')
                 <div class="mb-6">
                     <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nama Kategori</label>
-                    <input type="text" name="name" id="name" value="{{ old('name', $category->name) }}" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-lg" required>
+                    <input type="text" name="name" id="name" value="{{ old('name', $category->name) }}" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-lg text-gray-900" required>
                     @error('name')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror

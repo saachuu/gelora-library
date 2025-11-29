@@ -1,4 +1,4 @@
-# Sistem Manajemen Perpustakaan
+# Gelora Library
 
 Aplikasi web modern untuk mengelola operasional perpustakaan, mulai dari manajemen buku, anggota, sirkulasi peminjaman, hingga pelaporan.
 

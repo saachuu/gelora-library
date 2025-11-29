@@ -18,7 +18,7 @@
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-blue-600">
             <div>
                 <a href="/" class="flex flex-col items-center">
-                    <span class="text-3xl font-bold text-white drop-shadow-md">Sistem Perpustakaan</span>
+                    <span class="text-3xl font-bold text-white drop-shadow-md">Gelora Library</span>
                 </a>
             </div>
 
@@ -27,7 +27,7 @@
             </div>
             
             <div class="mt-8 text-white/80 text-sm">
-                &copy; {{ date('Y') }} Sistem Manajemen Perpustakaan.
+                &copy; {{ date('Y') }} Gelora Library.
             </div>
         </div>
     </body>

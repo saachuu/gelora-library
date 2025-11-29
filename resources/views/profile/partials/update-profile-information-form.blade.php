@@ -19,7 +19,7 @@
 
         <div>
             <label for="name" class="block text-sm font-medium text-gray-700 mb-1">{{ __('Nama') }}</label>
-            <input id="name" name="name" type="text" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-lg" value="{{ old('name', $user->name) }}" required autofocus autocomplete="name" />
+            <input id="name" name="name" type="text" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-lg text-gray-900" value="{{ old('name', $user->name) }}" required autofocus autocomplete="name" />
             @error('name')
                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
             @enderror
@@ -27,7 +27,7 @@
 
         <div>
             <label for="email" class="block text-sm font-medium text-gray-700 mb-1">{{ __('Email') }}</label>
-            <input id="email" name="email" type="email" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-lg" value="{{ old('email', $user->email) }}" required autocomplete="username" />
+            <input id="email" name="email" type="email" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-lg text-gray-900" value="{{ old('email', $user->email) }}" required autocomplete="username" />
             @error('email')
                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
             @enderror
