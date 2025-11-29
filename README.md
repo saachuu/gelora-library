@@ -129,7 +129,7 @@ erDiagram
 ### 5. Laporan
 *   Melihat riwayat peminjaman dan pengembalian.
 *   Filter laporan berdasarkan status stok atau kategori.
-*   **Ekspor Data**: Mengunduh laporan ketersediaan buku dalam format CSV/Excel.
+*   **Ekspor Data**: Mengunduh laporan ketersediaan buku dalam format PDF.
 
 ---
 &copy; 2025 Sistem Manajemen Perpustakaan. Dibuat dengan ❤️ oleh Eka Revandi.
