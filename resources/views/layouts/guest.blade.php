@@ -18,7 +18,7 @@
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-0 sm:pt-0 bg-white sm:bg-blue-600">
             <div class="mt-6 sm:mt-0">
                 <a href="/" class="flex flex-col items-center">
-                    <span class="text-3xl font-bold text-blue-600 sm:text-white drop-shadow-none sm:drop-shadow-md">Gelora Library</span>
+                    <img src="{{ asset('images/logo.png') }}" alt="Gelora Library" class="h-20 w-auto">
                 </a>
             </div>
 
