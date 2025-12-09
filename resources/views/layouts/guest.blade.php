@@ -15,7 +15,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-0 sm:pt-0 bg-white sm:bg-blue-600">
+        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-0 sm:pt-0 bg-white">
             <div class="mt-6 sm:mt-0">
                 <a href="/" class="flex flex-col items-center">
                     <img src="{{ asset('images/logo.png') }}" alt="Gelora Library" class="h-20 w-auto">
@@ -26,7 +26,7 @@
                 {{ $slot }}
             </div>
             
-            <div class="mt-8 mb-8 sm:mb-0 text-gray-500 sm:text-white/80 text-sm">
+            <div class="mt-8 mb-8 sm:mb-0 text-gray-500 text-sm">
                 &copy; {{ date('Y') }} Gelora Library.
             </div>
         </div>
