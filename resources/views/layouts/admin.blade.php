@@ -22,7 +22,7 @@
                 <!-- Sidebar Header -->
                 <div class="flex items-center justify-center h-16 border-b px-4">
                      <a href="{{ route('dashboard') }}">
-                        <img src="{{ asset('images/logo.png') }}" alt="Gelora Library" class="h-10 w-auto">
+                        <img src="{{ asset('images/open-book.png') }}" alt="Gelora Library" class="h-10 w-auto">
                     </a>
                 </div>
                 <!-- Sidebar Links -->
@@ -73,7 +73,7 @@
                 <div class="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
                     <div class="flex-shrink-0 flex items-center px-4">
                          <a href="{{ route('dashboard') }}">
-                            <img src="{{ asset('images/logo.png') }}" alt="Gelora Library" class="h-10 w-auto">
+                            <img src="{{ asset('images/open-book.png') }}" alt="Gelora Library" class="h-10 w-auto">
                         </a>
                     </div>
                     <nav class="mt-5 px-2 space-y-1">
