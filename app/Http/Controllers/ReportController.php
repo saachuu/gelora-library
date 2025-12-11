@@ -2,58 +2,43 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Models\Loan;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
-use PDF;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ReportController extends Controller
 {
     /**
-     * Menampilkan daftar laporan peminjaman.
+     * Tampilkan halaman laporan (Tabel)
      */
-    public function index(Request $request)
+    public function index()
     {
-        // Set tanggal default ke bulan ini jika tidak ada input
-        $startDate = $request->input('start_date', Carbon::now()->startOfMonth()->toDateString());
-        $endDate = $request->input('end_date', Carbon::now()->endOfMonth()->toDateString());
+        // Ambil data peminjaman, urutkan dari yang terbaru
+        // Gunakan 'with' untuk mengambil data member & buku sekaligus (Eager Loading)
+        $loans = Loan::with(['member', 'book'])
+            ->latest()
+            ->paginate(10);
 
-        // Ambil data peminjaman berdasarkan rentang tanggal
-        $loans = Loan::with(['book', 'member'])
-            ->whereBetween('loan_date', [$startDate, $endDate])
-            ->orderBy('loan_date', 'desc')
-            ->get();
-
-        return view('dasbor.laporan.index', compact('loans', 'startDate', 'endDate'));
+        return view('dasbor.laporan.index', compact('loans'));
     }
 
     /**
-     * Mengekspor laporan peminjaman ke PDF.
+     * Export ke PDF
      */
-    public function export(Request $request)
+    public function export()
     {
-        // Validasi dan set tanggal default
-        $startDate = $request->input('start_date', Carbon::now()->startOfMonth()->toDateString());
-        $endDate = $request->input('end_date', Carbon::now()->endOfMonth()->toDateString());
-
-        // Ambil data peminjaman berdasarkan rentang tanggal
-        $loans = Loan::with(['book', 'member'])
-            ->whereBetween('loan_date', [$startDate, $endDate])
-            ->orderBy('loan_date', 'desc')
+        // Ambil semua data untuk dicetak
+        $loans = Loan::with(['member', 'book'])
+            ->latest()
             ->get();
 
-        // Data untuk dilempar ke view PDF
-        $data = [
-            'loans' => $loans,
-            'startDate' => Carbon::parse($startDate)->isoFormat('D MMMM Y'),
-            'endDate' => Carbon::parse($endDate)->isoFormat('D MMMM Y')
-        ];
+        // Load view PDF
+        $pdf = Pdf::loadView('dasbor.laporan.pdf', compact('loans'));
 
-        // Generate PDF
-        $pdf = PDF::loadView('dasbor.laporan.pdf', $data);
-        
-        // Download PDF
-        $fileName = 'laporan-peminjaman-' . $startDate . '-' . $endDate . '.pdf';
-        return $pdf->download($fileName);
+        // Set ukuran kertas Landscape agar tabel muat
+        $pdf->setPaper('a4', 'landscape');
+
+        return $pdf->stream('Laporan-Sirkulasi-Perpustakaan.pdf');
     }
 }

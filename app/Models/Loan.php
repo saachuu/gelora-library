@@ -21,31 +21,19 @@ class Loan extends Model
         'fine',
     ];
 
-    /**
-     * Get the user that owns the Loan
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
+    // Relasi ke User (Admin/Pustakawan)
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Get the member that owns the Loan
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
+    // Relasi ke Member (Siswa) -- PENTING UNTUK LAPORAN
     public function member(): BelongsTo
     {
         return $this->belongsTo(Member::class);
     }
 
-    /**
-     * Get the book that owns the Loan
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
+    // Relasi ke Buku -- PENTING UNTUK LAPORAN
     public function book(): BelongsTo
     {
         return $this->belongsTo(Book::class);

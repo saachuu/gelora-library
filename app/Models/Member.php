@@ -21,11 +21,26 @@ class Member extends Model
 
     /**
      * Get all of the loans for the Member
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function loans(): HasMany
     {
         return $this->hasMany(Loan::class);
+    }
+
+    /**
+     * Get all of the visits for the Member
+     */
+    public function visits(): HasMany
+    {
+        return $this->hasMany(Visit::class);
+    }
+
+    /**
+     * Hitung total poin kehadiran (dimana durasi > 10 menit)
+     * Cara pakai: $member->attendance_points
+     */
+    public function getAttendancePointsAttribute()
+    {
+        return $this->visits()->where('got_point', true)->count();
     }
 }
