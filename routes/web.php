@@ -43,6 +43,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/absensi', [VisitController::class, 'store'])->name('dasbor.absensi.store');
         // Rute Peringkat Siswa
         Route::get('/absensi/peringkat', [VisitController::class, 'leaderboard'])->name('dasbor.absensi.leaderboard');
+        // Rute Export Leaderboard (BARU)
+        Route::get('/absensi/peringkat/export', [VisitController::class, 'exportLeaderboardPdf'])->name('dasbor.absensi.leaderboard.pdf');
         // Rute Cetak PDF Keaktifan Siswa
         Route::get('/absensi/export-pdf', [VisitController::class, 'exportPdf'])->name('dasbor.absensi.pdf');
         // ==========================================
@@ -51,6 +53,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // Rute Laporan
         Route::get('/laporan/export', [ReportController::class, 'export'])->name('dasbor.laporan.export');
         Route::get('/laporan', [ReportController::class, 'index'])->name('dasbor.laporan.index');
+
+        // Rute Import
+        Route::post('/buku/import', [BookController::class, 'import'])->name('dasbor.buku.import');
+        Route::post('/anggota/import', [MemberController::class, 'import'])->name('dasbor.anggota.import');
     });
 
     // Profile routes

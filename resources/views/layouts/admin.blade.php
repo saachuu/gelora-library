@@ -6,7 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Gelora Library') }}</title>
+    {{-- 1. TITLE DINAMIS --}}
+    {{-- Format: Gelora Library - [Nama Halaman] --}}
+    <title>Gelora Library - @yield('title', 'Admin Panel')</title>
+
+    {{-- 2. FAVICON (LOGO SEKOLAH DI TAB BROWSER) --}}
+    {{-- Pastikan file logo.png ada di public/images/ --}}
+    <link rel="icon" href="{{ asset('images/logo.png') }}" type="image/png">
 
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />

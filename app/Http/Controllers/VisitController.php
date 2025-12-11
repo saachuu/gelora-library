@@ -2,83 +2,88 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Member;
 use App\Models\Visit;
+use App\Models\Member;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class VisitController extends Controller
 {
     public function index()
     {
         $todayVisits = Visit::with('member')
-            ->whereDate('created_at', today())
+            ->whereDate('check_in_at', Carbon::today())
             ->latest('updated_at')
             ->paginate(10);
 
         return view('dasbor.absensi.index', compact('todayVisits'));
     }
 
-    /**
-     * API: Cek Status Member (Sedang berkunjung atau tidak?)
-     */
+    // API Cek Status
     public function checkStatus($memberId)
     {
         $activeVisit = Visit::where('member_id', $memberId)
-            ->whereDate('created_at', today())
+            ->whereDate('check_in_at', Carbon::today())
             ->whereNull('check_out_at')
             ->first();
 
         return response()->json([
             'is_checked_in' => $activeVisit ? true : false,
-            'check_in_time' => $activeVisit ? $activeVisit->check_in_at->format('H:i') : null,
+            'check_in_time' => $activeVisit ? Carbon::parse($activeVisit->check_in_at)->format('H:i') : null,
         ]);
     }
 
-    /**
-     * API: Live Search Khusus Absensi
-     */
+    // API Live Search
     public function searchMember(Request $request)
     {
-        $search = $request->get('q');
+        $search = $request->q;
+        if (empty($search)) return response()->json([]);
 
         $members = Member::where('is_active', true)
-            ->where(function($query) use ($search) {
-                $query->where('member_id_number', 'like', "%{$search}%")
-                      ->orWhere('full_name', 'like', "%{$search}%");
+            ->where(function($q) use ($search) {
+                $q->where('member_id_number', 'like', "%{$search}%")
+                  ->orWhere('full_name', 'like', "%{$search}%");
             })
-            ->limit(10)
+            ->limit(5)
             ->get();
 
         $results = $members->map(function($member) {
             return [
                 'id' => $member->id,
                 'text' => $member->member_id_number . ' - ' . $member->full_name,
+                'name' => $member->full_name
             ];
         });
 
         return response()->json($results);
     }
 
-    public function store(Request $request)
+    // Proses Simpan
+   public function store(Request $request)
     {
         $request->validate([
             'member_id' => 'required|exists:members,id',
+            'notes' => 'nullable|string',
         ]);
 
         $member = Member::find($request->member_id);
 
-        // Cek apakah sedang berkunjung
+        // Cek apakah sedang berkunjung (Masuk hari ini, belum keluar)
         $activeVisit = Visit::where('member_id', $member->id)
-            ->whereDate('created_at', today())
+            ->whereDate('check_in_at', Carbon::today())
             ->whereNull('check_out_at')
             ->first();
 
         if ($activeVisit) {
-            // === CHECK-OUT ===
+            // === CHECK-OUT (KELUAR) ===
             $checkOutTime = now();
-            $duration = $activeVisit->check_in_at->diffInMinutes($checkOutTime);
-            $gotPoint = $duration >= 10;
+
+            // PENTING: Gunakan Carbon::parse untuk keamanan perhitungan durasi
+            $checkInTime = Carbon::parse($activeVisit->check_in_at);
+            $duration = $checkInTime->diffInMinutes($checkOutTime);
+
+            $gotPoint = $duration > 10;
 
             $activeVisit->update([
                 'check_out_at' => $checkOutTime,
@@ -92,53 +97,60 @@ class VisitController extends Controller
             return back()->with('success', $msg);
 
         } else {
-            // === CHECK-IN ===
+            // === CHECK-IN (MASUK) ===
             Visit::create([
                 'member_id' => $member->id,
                 'check_in_at' => now(),
+                'notes' => $request->notes, // Ini sekarang aman karena sudah ada di fillable
+                'got_point' => false,
             ]);
 
             return back()->with('success', "Selamat datang, {$member->full_name}!");
         }
     }
 
-    /**
-     * Menampilkan Halaman Peringkat (Leaderboard)
-     */
     public function leaderboard()
     {
-        // Ambil data member, hitung jumlah visit yang 'got_point' = true
-        $members = Member::withCount(['visits as total_points' => function ($query) {
-                $query->where('got_point', true);
-            }])
-            ->orderByDesc('total_points') // Urutkan dari poin terbanyak
-            ->orderBy('full_name')        // Jika poin sama, urut abjad
-            ->paginate(20);               // Tampilkan 20 siswa per halaman
-
-        return view('dasbor.absensi.leaderboard', compact('members'));
-    }
-
-    /**
-     * Cetak Laporan PDF
-     */
-    public function exportPdf()
-    {
-        // Ambil 50 siswa ter-rajin
-        $members = Member::withCount(['visits as total_points' => function ($query) {
+        // Hitung total poin (jumlah kunjungan yang got_point = true)
+        $top_students = Member::withCount(['visits as total_points' => function ($query) {
                 $query->where('got_point', true);
             }])
             ->orderByDesc('total_points')
-            ->orderBy('full_name')
-            ->limit(50) // Batasi 50 agar muat di kertas
+            ->limit(20)
             ->get();
 
-        // Load view khusus PDF
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('dasbor.absensi.pdf', compact('members'));
+        return view('dasbor.absensi.leaderboard', compact('top_students'));
+    }
 
-        // Set ukuran kertas A4 Portrait
-        $pdf->setPaper('a4', 'portrait');
+    // --- FITUR EXPORT PDF ---
 
-        // Download file
-        return $pdf->stream('Laporan-Keaktifan-Siswa.pdf');
+    // 1. Export Harian (Perbaikan Error)
+    public function exportPdf()
+    {
+        $visits = Visit::with('member')
+            ->whereDate('check_in_at', Carbon::today())
+            ->orderBy('check_in_at', 'asc') // Urutkan dari yang datang duluan
+            ->get();
+
+        $pdf = Pdf::loadView('dasbor.absensi.pdf', compact('visits'));
+        // Set ukuran kertas F4 atau A4 landscape agar muat banyak kolom
+        $pdf->setPaper('a4', 'landscape');
+
+        return $pdf->download('Laporan-Kunjungan.pdf');
+    }
+
+    // 2. Export Leaderboard (Fitur Baru)
+    public function exportLeaderboardPdf()
+    {
+        $members = Member::withCount(['visits as total_points' => function ($query) {
+                $query->where('got_point', true);
+            }])
+            ->having('total_points', '>', 0) // Hanya yg punya poin
+            ->orderByDesc('total_points')
+            ->limit(50)
+            ->get();
+
+        $pdf = Pdf::loadView('dasbor.absensi.pdf_leaderboard', compact('members'));
+        return $pdf->download('Peringkat-Siswa-Rajin.pdf');
     }
 }

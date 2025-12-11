@@ -1,4 +1,5 @@
 @extends('layouts.admin')
+@section('title', 'Dashboard')
 
 @section('content')
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -138,7 +139,8 @@
                             <div class="ml-3 flex-1 min-w-0">
                                 <p class="text-sm font-semibold truncate">{{ $rank->member->full_name }}</p>
                                 <p class="text-xs text-indigo-100 truncate">{{ $rank->member->position }}
-                                    ({{ $rank->member->member_id_number }})</p>
+                                    ({{ $rank->member->member_id_number }})
+                                </p>
                             </div>
 
                             <div class="text-right">

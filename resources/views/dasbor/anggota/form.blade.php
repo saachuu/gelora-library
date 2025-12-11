@@ -31,9 +31,9 @@
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Kelas / Jabatan</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Kelas</label>
                         <input type="text" name="position" value="{{ old('position', $member->position ?? '') }}"
-                            placeholder="Contoh: 9A, 7B, atau Guru"
+                            placeholder="Contoh: 9A, 7B, atau 8E"
                             class="w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
                             required>
                     </div>

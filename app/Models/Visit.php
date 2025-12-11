@@ -13,6 +13,7 @@ class Visit extends Model
         'check_out_at',
         'duration_minutes',
         'got_point',
+        'notes', // <--- WAJIB DITAMBAHKAN AGAR TIDAK ERROR
     ];
 
     protected $casts = [

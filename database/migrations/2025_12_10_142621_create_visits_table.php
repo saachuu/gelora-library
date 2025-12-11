@@ -10,15 +10,16 @@ return new class extends Migration
     {
         Schema::create('visits', function (Blueprint $table) {
             $table->id();
-            // Relasi ke member. Jika member dihapus, history kunjungan ikut terhapus.
             $table->foreignId('member_id')->constrained('members')->onDelete('cascade');
 
-            $table->dateTime('check_in_at');
-            $table->dateTime('check_out_at')->nullable();
+            $table->dateTime('check_in_at');            // Jam Masuk
+            $table->dateTime('check_out_at')->nullable(); // Jam Keluar
 
-            // Kolom hasil kalkulasi
             $table->integer('duration_minutes')->default(0);
-            $table->boolean('got_point')->default(false); // True jika > 10 menit
+            $table->boolean('got_point')->default(false);
+
+            // KOLOM BARU UNTUK KEPERLUAN
+            $table->string('notes')->nullable();
 
             $table->timestamps();
         });
