@@ -7,6 +7,7 @@ use App\Models\Book;
 use App\Models\Member;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class CirculationController extends Controller
 {
@@ -31,7 +32,6 @@ class CirculationController extends Controller
             ->get();
 
         $results = $members->map(function($member) {
-            // Cek pinjaman aktif
             $activeLoan = Loan::with('book')
                 ->where('member_id', $member->id)
                 ->whereIn('status', ['Dipinjam', 'Terlambat'])
@@ -106,15 +106,16 @@ class CirculationController extends Controller
 
         // 3. Simpan Transaksi
         try {
-            \DB::transaction(function() use ($request, $book) {
+            DB::transaction(function() use ($request, $book) {
                 $book->decrement('available');
 
                 Loan::create([
                     'user_id' => auth()->id(),
                     'member_id' => $request->member_id,
                     'book_id' => $request->book_id,
-                    'loan_date' => now(),
-                    'due_date' => now()->addWeeks(2), // FIX 2 Minggu
+                    // KEMBALI KE SYSTEM NORMAL
+                    'loan_date' => now(),             // Tanggal hari ini
+                    'due_date' => now()->addWeeks(2), // Jatuh tempo 2 minggu lagi
                     'status' => 'Dipinjam',
                     'fine' => 0
                 ]);
@@ -145,21 +146,27 @@ class CirculationController extends Controller
             return back()->with('error', 'Siswa ini tidak memiliki pinjaman aktif.');
         }
 
-        // 2. Hitung Denda
-        $returnDate = now();
-        $fine = 0;
+        // 2. Hitung Denda (Logika startOfDay agar hitungan hari akurat)
+        $dueDate = Carbon::parse($loan->due_date)->startOfDay();
+        $returnDate = Carbon::now()->startOfDay();
 
-        if ($returnDate->gt($loan->due_date)) {
-            $daysOverdue = $returnDate->diffInDays($loan->due_date);
-            $fine = $daysOverdue * 1000; // Rp 1.000/hari
+        $fine = 0;
+        $daysOverdue = 0;
+
+        if ($returnDate->gt($dueDate)) {
+            $daysOverdue = $returnDate->diffInDays($dueDate);
+            $fine = $daysOverdue * 1000; // Denda Rp 1.000 per hari
         }
 
         // 3. Simpan Transaksi
         try {
-            \DB::transaction(function() use ($loan, $returnDate, $fine) {
+            DB::transaction(function() use ($loan, $returnDate, $fine) {
+                // Status otomatis update sesuai denda
+                $finalStatus = $fine > 0 ? 'Terlambat' : 'Dikembalikan';
+
                 $loan->update([
-                    'return_date' => $returnDate,
-                    'status' => $fine > 0 ? 'Terlambat' : 'Dikembalikan',
+                    'return_date' => now(),
+                    'status' => $finalStatus,
                     'fine' => $fine
                 ]);
 
@@ -167,12 +174,14 @@ class CirculationController extends Controller
             });
 
             $msg = 'Buku dikembalikan.';
-            if ($fine > 0) $msg .= ' Denda: Rp ' . number_format($fine, 0, ',', '.');
+            if ($fine > 0) {
+                $msg .= ' Terlambat ' . $daysOverdue . ' hari. Denda: Rp ' . number_format($fine, 0, ',', '.');
+            }
 
             return back()->with('success', $msg);
 
         } catch (\Exception $e) {
-            return back()->with('error', 'Gagal memproses pengembalian.');
+            return back()->with('error', 'Gagal memproses pengembalian: ' . $e->getMessage());
         }
     }
 }

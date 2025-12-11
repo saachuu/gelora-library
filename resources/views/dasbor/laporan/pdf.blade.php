@@ -17,47 +17,96 @@
 
         th,
         td {
-            border: 1px solid #000;
+            border: 1px solid #ddd;
             padding: 8px;
             text-align: left;
         }
 
         th {
-            background-color: #eee;
+            background-color: #f2f2f2;
+            font-weight: bold;
         }
 
-        h1 {
-            text-align: center;
+        /* Styling untuk Status */
+        .status-dipinjam {
+            color: #d97706;
+            font-weight: bold;
         }
+
+        /* Kuning Gelap */
+        .status-dikembalikan {
+            color: #16a34a;
+            font-weight: bold;
+        }
+
+        /* Hijau */
+        .status-terlambat {
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        /* Merah */
     </style>
 </head>
 
 <body>
-    <h1>Laporan Peminjaman Perpustakaan</h1>
-    <p>Dicetak pada: {{ now()->format('d M Y') }}</p>
+    <div style="text-align: center; margin-bottom: 20px;">
+        <h2 style="margin: 0;">Laporan Sirkulasi Perpustakaan</h2>
+        <p style="margin: 5px 0;">SMP Gelora Depok</p>
+        <p style="font-size: 10px; color: #666;">Dicetak pada: {{ date('d/m/Y H:i') }}</p>
+    </div>
 
     <table>
         <thead>
             <tr>
-                <th>No</th>
-                <th>Tanggal Pinjam</th>
-                <th>Nama Siswa</th>
-                <th>NIS</th>
-                <th>Judul Buku</th>
-                <th>Status</th>
+                <th style="width: 5%">No</th>
+                <th style="width: 25%">Peminjam</th>
+                <th style="width: 25%">Judul Buku</th>
+                <th style="width: 15%">Tgl Pinjam</th>
+                <th style="width: 15%">Tgl Kembali</th>
+                <th style="width: 10%">Status</th>
+                <th style="width: 10%">Denda</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($loans as $index => $loan)
+            @forelse($loans as $index => $loan)
                 <tr>
-                    <td>{{ $index + 1 }}</td>
-                    <td>{{ \Carbon\Carbon::parse($loan->loan_date)->format('d M Y') }}</td>
-                    <td>{{ $loan->member->full_name }}</td>
-                    <td>{{ $loan->member->member_id_number }}</td>
+                    <td style="text-align: center;">{{ $index + 1 }}</td>
+                    <td>
+                        <strong>{{ $loan->member->full_name }}</strong><br>
+                        <span style="color: #666; font-size: 10px;">{{ $loan->member->member_id_number }}</span>
+                    </td>
                     <td>{{ $loan->book->title }}</td>
-                    <td>{{ $loan->status }}</td>
+
+                    <td>{{ \Carbon\Carbon::parse($loan->loan_date)->format('d/m/Y') }}</td>
+
+                    <td>
+                        {{ $loan->return_date ? \Carbon\Carbon::parse($loan->return_date)->format('d/m/Y') : '-' }}
+                    </td>
+
+                    <td>
+                        @if ($loan->status == 'Dikembalikan')
+                            <span class="status-dikembalikan">Dikembalikan</span>
+                        @elseif($loan->status == 'Terlambat')
+                            <span class="status-terlambat">Terlambat</span>
+                        @else
+                            <span class="status-dipinjam">Dipinjam</span>
+                        @endif
+                    </td>
+
+                    <td>
+                        @if ($loan->fine > 0)
+                            Rp {{ number_format($loan->fine, 0, ',', '.') }}
+                        @else
+                            -
+                        @endif
+                    </td>
                 </tr>
-            @endforeach
+            @empty
+                <tr>
+                    <td colspan="7" style="text-align: center; padding: 20px;">Tidak ada data sirkulasi.</td>
+                </tr>
+            @endforelse
         </tbody>
     </table>
 </body>

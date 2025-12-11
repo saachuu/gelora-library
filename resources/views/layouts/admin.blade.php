@@ -14,23 +14,33 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         [x-cloak] {
             display: none !important;
         }
+
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
     </style>
 </head>
 
-<body class="h-full font-sans antialiased text-gray-900">
+<body class="h-full font-sans antialiased text-gray-900 bg-gray-50">
     <div x-data="{ sidebarOpen: false }" @keydown.window.escape="sidebarOpen = false">
 
         <div x-show="sidebarOpen" x-cloak class="relative z-50 lg:hidden" role="dialog" aria-modal="true">
-
             <div x-show="sidebarOpen" x-transition:enter="transition-opacity ease-linear duration-300"
                 x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
                 x-transition:leave="transition-opacity ease-linear duration-300" x-transition:leave-start="opacity-100"
                 x-transition:leave-end="opacity-0" class="fixed inset-0 bg-gray-900/80"></div>
+
             <div class="fixed inset-0 flex">
                 <div x-show="sidebarOpen" x-transition:enter="transition ease-in-out duration-300 transform"
                     x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0"
@@ -49,11 +59,10 @@
                     </div>
 
                     <div class="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4">
-                        <div class="flex h-16 shrink-0 items-center border-b border-gray-100">
-                            <img class="h-8 w-auto" src="{{ asset('images/logo.png') }}"
+                        <div class="flex h-20 shrink-0 items-center justify-center border-b border-gray-100">
+                            <img class="h-10 w-auto" src="{{ asset('images/logo.png') }}"
                                 onerror="this.src='https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600'"
                                 alt="Gelora Library">
-                            {{-- <span class="ml-3 font-bold text-lg text-gray-800">Gelora Library</span> --}}
                         </div>
                         <nav class="flex flex-1 flex-col">
                             @include('layouts.partials.sidebar-items')
@@ -65,36 +74,23 @@
 
         <div class="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
             <div class="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-4">
-                <div class="flex h-16 shrink-0 items-center border-b border-gray-100">
-                    <img class="h-10 w-auto" src="{{ asset('images/logo.png') }}"
-                        onerror="this.src='https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600'"
-                        alt="Gelora Library">
-                    {{-- <span class="ml-3 font-bold text-xl text-gray-800">Gelora Library</span> --}}
+
+                <div class="flex h-24 shrink-0 items-center justify-center border-b border-gray-100">
+                    <div class="flex flex-col items-center">
+                        <img class="h-12 w-auto mb-2" src="{{ asset('images/logo.png') }}"
+                            onerror="this.src='https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600'"
+                            alt="Gelora Library">
+                    </div>
                 </div>
+
                 <nav class="flex flex-1 flex-col mt-4">
                     @include('layouts.partials.sidebar-items')
-
-                    <ul role="list" class="mt-auto -mx-2 space-y-1">
-                        <li>
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button type="submit"
-                                    class="w-full group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-red-600">
-                                    <svg class="h-6 w-6 shrink-0 text-gray-400 group-hover:text-red-600" fill="none"
-                                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
-                                    </svg>
-                                    Keluar (Logout)
-                                </button>
-                            </form>
-                        </li>
-                    </ul>
                 </nav>
             </div>
         </div>
 
-        <div class="lg:pl-72 bg-white min-h-screen">
+        <div class="lg:pl-72 bg-gray-50 min-h-screen">
+
             <div
                 class="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
                 <button type="button" class="-m-2.5 p-2.5 text-gray-700 lg:hidden" @click="sidebarOpen = true">
@@ -107,14 +103,52 @@
 
                 <div class="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
                     <div class="flex flex-1"></div>
+
                     <div class="flex items-center gap-x-4 lg:gap-x-6">
-                        <div class="flex items-center">
-                            <div
-                                class="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold border border-indigo-200">
-                                {{ substr(Auth::user()->name ?? 'A', 0, 1) }}
+                        <div class="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-200" aria-hidden="true"></div>
+
+                        <div class="relative" x-data="{ open: false }">
+                            <button @click="open = !open" type="button" class="-m-1.5 flex items-center p-1.5"
+                                id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                                <span class="sr-only">Open user menu</span>
+                                <div
+                                    class="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold border border-indigo-200">
+                                    {{ substr(Auth::user()->name ?? 'A', 0, 1) }}
+                                </div>
+                                <span class="hidden lg:flex lg:items-center">
+                                    <span class="ml-4 text-sm font-semibold leading-6 text-gray-900"
+                                        aria-hidden="true">{{ Auth::user()->name ?? 'Admin' }}</span>
+                                    <svg class="ml-2 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor"
+                                        aria-hidden="true">
+                                        <path fill-rule="evenodd"
+                                            d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </span>
+                            </button>
+
+                            <div x-show="open" @click.away="open = false"
+                                x-transition:enter="transition ease-out duration-100"
+                                x-transition:enter-start="transform opacity-0 scale-95"
+                                x-transition:enter-end="transform opacity-100 scale-100"
+                                x-transition:leave="transition ease-in duration-75"
+                                x-transition:leave-start="transform opacity-100 scale-100"
+                                x-transition:leave-end="transform opacity-0 scale-95"
+                                class="absolute right-0 z-10 mt-2.5 w-48 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none"
+                                role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button"
+                                tabindex="-1" style="display: none;">
+
+                                <a href="{{ route('profile.edit') }}"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" role="menuitem"
+                                    tabindex="-1">Profil Saya</a>
+
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit"
+                                        class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                                        role="menuitem" tabindex="-1">Keluar (Logout)</button>
+                                </form>
                             </div>
-                            <span class="ml-3 text-sm font-semibold leading-6 text-gray-900"
-                                aria-hidden="true">{{ Auth::user()->name ?? 'Admin' }}</span>
                         </div>
                     </div>
                 </div>
@@ -122,6 +156,40 @@
 
             <main class="py-10">
                 <div class="px-4 sm:px-6 lg:px-8">
+                    @if (session('success'))
+                        <div class="mb-6 rounded-md bg-green-50 p-4 border border-green-200 shadow-sm">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm font-medium text-green-800">{{ session('success') }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
+                    @if (session('error'))
+                        <div class="mb-6 rounded-md bg-red-50 p-4 border border-red-200 shadow-sm">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm font-medium text-red-800">{{ session('error') }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
                     @yield('content')
                 </div>
             </main>

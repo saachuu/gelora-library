@@ -123,7 +123,7 @@ class VisitController extends Controller
      */
     public function exportPdf()
     {
-        // Ambil 50 siswa terrajin
+        // Ambil 50 siswa ter-rajin
         $members = Member::withCount(['visits as total_points' => function ($query) {
                 $query->where('got_point', true);
             }])

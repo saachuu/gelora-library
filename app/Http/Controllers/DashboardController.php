@@ -5,88 +5,77 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use App\Models\Loan;
 use App\Models\Member;
-use App\Models\Visit; // <--- Jangan lupa import Model Visit
+use App\Models\Visit; // Tambahkan Model Visit
+use App\Models\Category;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB; // Untuk query raw
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        // 1. Statistik Utama
-        $bookCount = Book::count();
-        $memberCount = Member::where('is_active', true)->count();
-        $activeLoanCount = Loan::where('status', 'Dipinjam')->count();
+        // --- KARTU ATAS (Total Data) ---
+        $total_buku = Book::count();
+        $total_anggota = Member::count();
+        $total_peminjaman = Loan::whereIn('status', ['Dipinjam', 'Terlambat'])->count();
+        $total_dikembalikan = Loan::where('status', 'Dikembalikan')->count();
 
-        // Pengunjung Hari Ini (Fitur Baru)
-        $todayVisitCount = Visit::whereDate('created_at', today())->count();
-
-        $overdueLoanCount = Loan::where('status', 'Terlambat')
-                                 ->orWhere(function($query) {
-                                     $query->where('status', 'Dipinjam')
-                                           ->where('due_date', '<', now());
-                                 })
-                                 ->count();
-
-        // 2. Grafik Peminjaman Bulanan (Tetap sama)
-        $isSqlite = DB::connection()->getDriverName() === 'sqlite';
-        $monthFunction = $isSqlite ? "strftime('%m', created_at)" : 'MONTH(created_at)';
-
-        $monthlyCounts = Loan::selectRaw("$monthFunction as month, COUNT(*) as count")
-            ->whereYear('created_at', date('Y'))
-            ->groupBy('month')
-            ->orderBy('month')
-            ->pluck('count', 'month')
-            ->toArray();
-
-        $monthlyData = [];
-        for ($i = 1; $i <= 12; $i++) {
-            $key = $isSqlite ? sprintf('%02d', $i) : $i;
-            $count = $monthlyCounts[$key] ?? ($monthlyCounts[(int)$key] ?? 0);
-            $monthlyData[] = $count;
-        }
-
-        // 3. Top 5 Siswa Terrajin (Berdasarkan Poin Kehadiran)
-        // Kita ambil member yang punya poin > 0, diurutkan dari yang terbanyak
-        $topMembers = Member::withCount(['visits as total_points' => function ($query) {
-                $query->where('got_point', true);
-            }])
-            ->orderByDesc('total_points')
-            ->take(5)
+        // --- CHART 1: BUKU TERPOPULER (Top 5) ---
+        $populer = Loan::select('book_id', DB::raw('count(*) as total'))
+            ->groupBy('book_id')
+            ->orderByDesc('total')
+            ->limit(5)
+            ->with('book')
             ->get();
 
-        // 4. Buku Populer & Aktivitas Terbaru (Tetap sama)
-        $popularBooks = Book::withCount('loans')
-            ->orderBy('loans_count', 'desc')
-            ->take(5)
+        $label_populer = $populer->map(function($p) {
+            return substr($p->book->title, 0, 20) . '...';
+        });
+        $data_populer = $populer->pluck('total');
+
+        // --- CHART 2: TREN PEMINJAMAN (6 Bulan Terakhir) ---
+        $peminjaman_bulanan = Loan::select(
+            DB::raw('DATE_FORMAT(loan_date, "%Y-%m") as bulan'),
+            DB::raw('count(*) as total')
+        )
+        ->where('loan_date', '>=', Carbon::now()->subMonths(6))
+        ->groupBy('bulan')
+        ->orderBy('bulan', 'asc')
+        ->get();
+
+        $label_tren = $peminjaman_bulanan->map(function($item) {
+            return Carbon::createFromFormat('Y-m', $item->bulan)->format('M Y');
+        });
+        $data_tren = $peminjaman_bulanan->pluck('total');
+
+        // --- CHART 3: STATISTIK KATEGORI ---
+        $kategori = Book::select('category_id', DB::raw('count(*) as total'))
+            ->groupBy('category_id')
+            ->with('category')
             ->get();
 
-        $recentActivities = Loan::with(['member', 'book'])
-            ->latest()
-            ->take(5)
-            ->get();
+        $label_kategori = $kategori->map(fn($k) => $k->category->name ?? 'Lainnya');
+        $data_kategori = $kategori->pluck('total');
 
-        // 5. Statistik Kategori (Tetap sama)
-        $categoryStats = \App\Models\Category::withCount('books')
-            ->get()
-            ->map(function ($category) {
-                return [
-                    'name' => $category->name,
-                    'count' => $category->books_count,
-                ];
-            });
+        // --- TAMBAHAN BARU: TOP 3 SISWA RAJIN (POIN TERTINGGI) ---
+        $top_siswa = Visit::where('got_point', true)
+            ->select('member_id', DB::raw('count(*) as total_poin'))
+            ->groupBy('member_id')
+            ->orderByDesc('total_poin')
+            ->limit(3)
+            ->with('member')
+            ->get();
 
         return view('dasbor.index', compact(
-            'bookCount',
-            'memberCount',
-            'activeLoanCount',
-            'overdueLoanCount',
-            'todayVisitCount', // <--- Variabel baru
-            'monthlyData',
-            'popularBooks',
-            'recentActivities',
-            'categoryStats',
-            'topMembers'       // <--- Variabel baru
+            'total_buku',
+            'total_anggota',
+            'total_peminjaman',
+            'total_dikembalikan',
+            'label_populer', 'data_populer',
+            'label_tren', 'data_tren',
+            'label_kategori', 'data_kategori',
+            'top_siswa' // Kirim data siswa ke view
         ));
     }
 }

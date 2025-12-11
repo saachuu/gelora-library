@@ -47,6 +47,9 @@ class MemberController extends Controller
             'contact' => 'required|string|max:255',
         ]);
 
+        // Default status aktif saat buat baru
+        $validated['is_active'] = true;
+
         Member::create($validated);
 
         return redirect()->route('dasbor.anggota.index')->with('success', 'Anggota berhasil ditambahkan.');
@@ -57,7 +60,8 @@ class MemberController extends Controller
      */
     public function show(Member $anggotum)
     {
-        return view('dasbor.anggota.show', compact('anggotum'));
+        // Sesuaikan variable ke view jika view show membutuhkannya
+        return view('dasbor.anggota.show', ['member' => $anggotum]);
     }
 
     /**
@@ -65,7 +69,9 @@ class MemberController extends Controller
      */
     public function edit(Member $anggotum)
     {
-        return view('dasbor.anggota.form', compact('anggotum'));
+        // ERROR FIX: Parameter harus $anggotum (sesuai route),
+        // tapi dikirim ke view sebagai 'member' agar form terisi.
+        return view('dasbor.anggota.form', ['member' => $anggotum]);
     }
 
     /**
@@ -74,11 +80,12 @@ class MemberController extends Controller
     public function update(Request $request, Member $anggotum)
     {
         $validated = $request->validate([
+            // Pengecualian unique ID menggunakan ID dari $anggotum
             'member_id_number' => 'required|string|unique:members,member_id_number,' . $anggotum->id,
             'full_name' => 'required|string|max:255',
             'position' => 'required|string|max:255',
             'contact' => 'required|string|max:255',
-            'is_active' => 'required|boolean',
+            // 'is_active' dihapus dari validasi karena tidak ada inputnya di form edit
         ]);
 
         $anggotum->update($validated);

@@ -4,7 +4,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" x-data="circulationHandler()">
 
         <div class="mb-8">
-            <h1 class="text-2xl font-bold text-gray-800">Sirkulasi & Absensi Pintar</h1>
+            <h1 class="text-2xl font-bold text-gray-800">Sirkulasi Peminjaman dan Pengembalian</h1>
             <p class="text-gray-500 text-sm mt-1">Sistem peminjaman otomatis dengan Live Search siswa & buku.</p>
         </div>
 
